@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "workshop.appName" . }}
+spec:
+  selector:
+    app: {{ include "workshop.appName" . }}
+  ports:
+    - port: 80
+      targetPort: 80
