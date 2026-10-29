@@ -1,1 +1,3 @@
-
+app:
+  name: mi-aplicacion
+  suffix: backend
