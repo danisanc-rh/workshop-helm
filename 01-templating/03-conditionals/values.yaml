@@ -1,0 +1,3 @@
+ingress:
+  enabled: false
+  host: app.ejemplo.com
