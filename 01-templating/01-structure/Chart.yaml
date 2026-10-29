@@ -1,0 +1,6 @@
+apiVersion: v2
+name: workshop-helm
+description: Ejercicio de templating
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
