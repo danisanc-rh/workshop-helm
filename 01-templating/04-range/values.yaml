@@ -1,0 +1,7 @@
+extraEnv:
+  - name: APP_MODE
+    value: workshop
+  - name: LOG_LEVEL
+    value: info
+  - name: API_URL
+    value: https://api.example.com
