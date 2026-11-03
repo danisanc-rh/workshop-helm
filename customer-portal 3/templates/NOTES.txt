@@ -1,0 +1,4 @@
+La aplicación {{ include "customer-portal.fullname" . }} fue desplegada en el namespace {{ .Release.Namespace }}.
+
+Para consultar los recursos:
+  kubectl get deployment,service,serviceaccount -n {{ .Release.Namespace }}

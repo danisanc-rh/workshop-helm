@@ -1,0 +1,25 @@
+replicaCount: 3
+
+image:
+  repository: nginx
+  tag: "1.27.5"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+serviceAccount:
+  create: true
+  name: customer-portal
+
+resources:
+  requests:
+    cpu: 200m
+    memory: 256Mi
+  limits:
+    cpu: "1"
+    memory: 512Mi
+
+podAnnotations:
+  environment: production
