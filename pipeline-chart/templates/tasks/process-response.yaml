@@ -1,0 +1,46 @@
+{{- if .Values.tasks.processResponse.enabled }}
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: {{ .Values.tasks.processResponse.name }}
+spec:
+  workspaces:
+    - name: shared-data
+
+  results:
+    - name: task-id
+    - name: task-title
+    - name: completed
+
+  steps:
+    - name: process-json
+      image: registry.access.redhat.com/ubi9/python-312:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          set -eu
+
+          FILE="$(workspaces.shared-data.path)/response.json"
+
+          python -c '
+          import json
+          import sys
+
+          with open(sys.argv[1]) as f:
+              data = json.load(f)
+
+          with open(sys.argv[2], "w") as f:
+              f.write(str(data["id"]))
+
+          with open(sys.argv[3], "w") as f:
+              f.write(data["title"])
+
+          with open(sys.argv[4], "w") as f:
+              f.write(str(data["completed"]).lower())
+          ' "$FILE" \
+            "$(results.task-id.path)" \
+            "$(results.task-title.path)" \
+            "$(results.completed.path)"
+
+          echo "JSON processing completed"
+{{- end }}

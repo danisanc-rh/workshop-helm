@@ -1,0 +1,39 @@
+{{- if .Values.tasks.fetchApi.enabled }}
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: {{ .Values.tasks.fetchApi.name }}
+spec:
+  params:
+    - name: api-url
+      type: string
+      default: https://jsonplaceholder.typicode.com/todos/1
+
+  workspaces:
+    - name: shared-data
+
+  results:
+    - name: http-status
+      description: HTTP status code
+
+  steps:
+    - name: request
+      image: curlimages/curl:8.12.1
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          set -eu
+
+          echo "Calling API..."
+
+          curl --fail \
+            --silent \
+            --show-error \
+            --location \
+            --output "$(workspaces.shared-data.path)/response.json" \
+            --write-out '%{http_code}' \
+            "$(params.api-url)" \
+            > "$(results.http-status.path)"
+
+          echo "API request completed"
+{{- end }}

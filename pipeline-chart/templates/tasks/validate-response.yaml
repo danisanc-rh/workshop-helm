@@ -1,0 +1,41 @@
+{{- if .Values.tasks.validateResponse.enabled }}
+apiVersion: tekton.dev/v1
+kind: Task
+metadata:
+  name: {{ .Values.tasks.validateResponse.name }}
+spec:
+  params:
+    - name: task-id
+      type: string
+
+    - name: task-title
+      type: string
+
+    - name: completed
+      type: string
+
+  steps:
+    - name: validate
+      image: registry.access.redhat.com/ubi9/ubi-minimal:latest
+      command: ["/bin/sh", "-c"]
+      args:
+        - |
+          set -eu
+
+          echo "Validating response..."
+
+          test -n "$(params.task-id)"
+          test -n "$(params.task-title)"
+
+          if [ "$(params.completed)" != "true" ] && \
+             [ "$(params.completed)" != "false" ]; then
+            echo "Invalid completed value"
+            exit 1
+          fi
+
+          echo "Task ID: $(params.task-id)"
+          echo "Task title: $(params.task-title)"
+          echo "Completed: $(params.completed)"
+
+          echo "Validation successful!"
+{{- end }}

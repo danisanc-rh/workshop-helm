@@ -1,0 +1,28 @@
+tasks:
+  fetchApi:
+    enabled: true
+    name: fetch-api
+
+  processResponse:
+    enabled: true
+    name: process-response
+
+  validateResponse:
+    enabled: true
+    name: validate-response
+
+pipeline:
+  enabled: true
+  name: api-integration-pipeline
+
+  apiUrl: https://jsonplaceholder.typicode.com/todos/1
+
+pipelineRun:
+  enabled: true
+  name: api-integration-run
+
+  apiUrl: https://jsonplaceholder.typicode.com/todos/1
+
+  workspace:
+    name: shared-data
+    type: emptyDir

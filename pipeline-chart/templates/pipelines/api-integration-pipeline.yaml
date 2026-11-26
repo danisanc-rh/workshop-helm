@@ -1,0 +1,47 @@
+{{- if .Values.pipeline.enabled }}
+apiVersion: tekton.dev/v1
+kind: Pipeline
+metadata:
+  name: {{ .Values.pipeline.name }}
+spec:
+  params:
+    - name: api-url
+      type: string
+      default: {{ .Values.pipeline.apiUrl | quote }}
+
+  workspaces:
+    - name: shared-data
+
+  tasks:
+    - name: fetch
+      taskRef:
+        name: {{ .Values.tasks.fetchApi.name }}
+      params:
+        - name: api-url
+          value: $(params.api-url)
+      workspaces:
+        - name: shared-data
+          workspace: shared-data
+
+    - name: process
+      runAfter:
+        - fetch
+      taskRef:
+        name: {{ .Values.tasks.processResponse.name }}
+      workspaces:
+        - name: shared-data
+          workspace: shared-data
+
+    - name: validate
+      runAfter:
+        - process
+      taskRef:
+        name: {{ .Values.tasks.validateResponse.name }}
+      params:
+        - name: task-id
+          value: $(tasks.process.results.task-id)
+        - name: task-title
+          value: $(tasks.process.results.task-title)
+        - name: completed
+          value: $(tasks.process.results.completed)
+{{- end }}
