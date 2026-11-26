@@ -4,7 +4,7 @@ tasks:
     name: fetch-api
 
   processResponse:
-    enabled: false
+    enabled: true
     name: process-response
 
   validateResponse:
