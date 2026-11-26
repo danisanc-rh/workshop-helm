@@ -54,7 +54,7 @@ spec:
         generateName: github-pipeline-run-
       spec:
         pipelineRef:
-          name: mi-pipeline
+          name: api-integration-pipeline
         params:
           - name: git-url
             value: $(tt.params.git-repository)
