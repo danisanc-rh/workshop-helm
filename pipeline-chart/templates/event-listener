@@ -60,6 +60,16 @@ spec:
             value: $(tt.params.git-repository)
           - name: git-revision
             value: $(tt.params.git-revision)
+        workspaces:
+          - name: shared-data
+            volumeClaimTemplate:
+              spec:
+                accessModes:
+                  - ReadWriteOnce
+                storageClassName: ocs-external-storagecluster-ceph-rbd
+                resources:
+                  requests:
+                    storage: 2Gi
 ---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
