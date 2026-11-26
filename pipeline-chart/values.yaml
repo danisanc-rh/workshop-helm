@@ -8,7 +8,7 @@ tasks:
     name: process-response
 
   validateResponse:
-    enabled: false
+    enabled: true
     name: validate-response
 
 pipeline:
