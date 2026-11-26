@@ -1,3 +1,66 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: pipeline-trigger-sa
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: pipeline-trigger-role
+rules:
+  - apiGroups:
+      - tekton.dev
+    resources:
+      - pipelineruns
+    verbs:
+      - create
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: pipeline-trigger-rb
+subjects:
+  - kind: ServiceAccount
+    name: pipeline-trigger-sa
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: pipeline-trigger-role
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerBinding
+metadata:
+  name: github-push-binding
+spec:
+  params:
+    - name: git-repository
+      value: $(body.repository.clone_url)
+    - name: git-revision
+      value: $(body.after)
+---
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: github-push-template
+spec:
+  params:
+    - name: git-repository
+    - name: git-revision
+  resourcetemplates:
+    - apiVersion: tekton.dev/v1
+      kind: PipelineRun
+      metadata:
+        generateName: github-pipeline-run-
+      spec:
+        pipelineRef:
+          name: mi-pipeline
+        params:
+          - name: git-url
+            value: $(tt.params.git-repository)
+          - name: git-revision
+            value: $(tt.params.git-revision)
+---
 apiVersion: triggers.tekton.dev/v1beta1
 kind: EventListener
 metadata:
