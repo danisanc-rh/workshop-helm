@@ -4,11 +4,11 @@ tasks:
     name: fetch-api
 
   processResponse:
-    enabled: true
+    enabled: false
     name: process-response
 
   validateResponse:
-    enabled: true
+    enabled: false
     name: validate-response
 
 pipeline:
